@@ -59,3 +59,11 @@
 *.mex*
 # Simulink Code Generation
 slprj/
+# MAT files with data
+*.mat
+
+## Data files
+*.csv
+*.itx
+
+## Folders
