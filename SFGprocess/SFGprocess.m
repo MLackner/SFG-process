@@ -22,7 +22,7 @@ function varargout = SFGprocess(varargin)
 
 % Edit the above text to modify the response to help SFGprocess
 
-% Last Modified by GUIDE v2.5 12-Oct-2014 17:08:44
+% Last Modified by GUIDE v2.5 15-Oct-2014 17:44:36
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -55,6 +55,14 @@ function SFGprocess_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for SFGprocess
 handles.output = hObject;
 
+% Define name for temporary raw data file
+handles.options.fileNameRawData = 'tempDataRaw.mat';
+% Define name for temporary raw data file
+handles.options.fileNamePrData = 'tempDataPr.mat';
+% Delete temporary Data
+delete(handles.options.fileNameRawData)
+delete(handles.options.fileNamePrData)
+
 % Update handles structure
 guidata(hObject, handles);
 
@@ -86,6 +94,7 @@ function push_loadMulti_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+fcn_load(handles);
 
 % --- Executes on selection change in listbox_rawData.
 function listbox_rawData_Callback(hObject, eventdata, handles)
@@ -96,6 +105,16 @@ function listbox_rawData_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns listbox_rawData contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listbox_rawData
 
+% Get file name of raw data
+fileName = handles.options.fileNameRawData;
+% Get index
+idx = get(handles.listbox_rawData,'Value');
+handles.options.idx = idx(end)
+idx
+% Define style
+handles.options.style = '.';
+% Call function to show raw data in preview
+fcn_showData(handles,fileName);
 
 % --- Executes during object creation, after setting all properties.
 function listbox_rawData_CreateFcn(hObject, eventdata, handles)
@@ -116,6 +135,7 @@ function push_process_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+fcn_process(handles)
 
 % --- Executes on selection change in listbox_processedData.
 function listbox_processedData_Callback(hObject, eventdata, handles)
@@ -126,6 +146,15 @@ function listbox_processedData_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns listbox_processedData contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from listbox_processedData
 
+% Get file name of processed data
+fileName = handles.options.fileNamePrData;
+% Get index
+idx = get(handles.listbox_processedData,'Value');
+handles.options.idx = idx(end);
+% Define style
+handles.options.style = '.-';
+% Call function to show processed data in preview
+fcn_showData(handles,fileName);
 
 % --- Executes during object creation, after setting all properties.
 function listbox_processedData_CreateFcn(hObject, eventdata, handles)
@@ -140,8 +169,69 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton4.
-function pushbutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton4 (see GCBO)
+% --- Executes on button press in push_loadData.
+function push_loadData_Callback(hObject, eventdata, handles)
+% hObject    handle to push_loadData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in push_newSession.
+function push_newSession_Callback(hObject, eventdata, handles)
+% hObject    handle to push_newSession (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Delete temporary Data
+delete(handles.options.fileNameRawData)
+delete(handles.options.fileNamePrData)
+% Delete entries in boxes
+set(handles.listbox_rawData,'String','')
+set(handles.listbox_processedData,'String','')
+
+
+% --- Executes on button press in push_saveData.
+function push_saveData_Callback(hObject, eventdata, handles)
+% hObject    handle to push_saveData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Call funtion
+fcn_saveData(handles)
+
+
+% --- Executes on button press in push_newFig.
+function push_newFig_Callback(hObject, eventdata, handles)
+% hObject    handle to push_newFig (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+figure;
+set(0,'CurrentFigure',gcf)
+xlabel('Wavenumber [cm^{-1}]')
+ylabel('Signal (a.u.)')
+
+% --- Executes on button press in push_plot.
+function push_plot_Callback(hObject, eventdata, handles)
+% hObject    handle to push_plot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Call funtion
+fcn_plot(handles)
+
+
+% --- Executes on button press in push_remove.
+function push_remove_Callback(hObject, eventdata, handles)
+% hObject    handle to push_remove (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Call function
+fcn_removeEntry(handles)
+
+% --- Executes on button press in push_export.
+function push_export_Callback(hObject, eventdata, handles)
+% hObject    handle to push_export (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
