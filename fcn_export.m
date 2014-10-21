@@ -10,11 +10,9 @@ DialogTitle = 'Export Data Set';
 %% Make filepath
 filePath = [PathName, FileName];
 
-%% Load file
-% Original file
-fileNameOriginal = handles.options.fileNamePrData;
-% Load *.mat file
-dataSet = load(fileNameOriginal);
+%% Get data
+h = handles.figure1;
+dataSet = getappdata(h,'processedDataSet');
 
 %% Save file
 save(filePath,'dataSet');

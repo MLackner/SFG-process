@@ -1,6 +1,8 @@
 function fcn_process(handles)
 % Process raw data
 
+fprintf('___________________________\n')
+fprintf('Start Processing...\n\n')
 % Get raw data
 h = handles.figure1;
 rawDataSet = getappdata(h,'rawDataSet');
@@ -8,7 +10,8 @@ rawDataSet = getappdata(h,'rawDataSet');
 % Loop through every raw data set
 for i=1:length(rawDataSet)
     % Get name of original file
-    name = rawDataSet(i).name
+    name = rawDataSet(i).name;
+    fprintf('(%g/%g)Processing %s\n', i, length(rawDataSet), name)
     % Get wavelength data
     wavelengthData = rawDataSet(i).wavelength;
     % Get signal data
@@ -71,6 +74,7 @@ for i=1:length(rawDataSet)
         'signal',sigDataPr,...
         'stepSize',stepSize,...
         'shotsPerAvg',shotsPerWL,...
+        'signalAmp',handles.options.signalAmplifier,...
         'parentFolder',rawDataSet(i).parentFolder)
     
     %% Redefine structure for FID
@@ -96,25 +100,29 @@ for i=1:length(rawDataSet)
         oldData = getappdata(h,'processedDataSet');
         % Check if there is already a data set with the same name as the
         % current data set (newData)
-        for j=1:length(oldData)
-            strOne = oldData(j).name
-            strTwo = newData.name
+        for k=1:length(oldData)
+            strOne = oldData(k).name;
+            strTwo = newData.name;
             if strcmp(strOne,strTwo)
                 % Overwrite that one
-                oldData(j)
-                newData
-                oldData(j) = newData;
-                fprintf('Overwrote %s!\n',oldData(j).name)
-            else
-                % Add data to structure array
-                newData = [oldData;newData];
+                oldData(k) = newData;
+                % Make new data empty
+                newData = [];
+                fprintf('!!!Overwrote %s!!!\n',oldData(k).name)
+                % Escape out of for loop
+                break
             end
         end
+        saveData = [oldData;newData];
+    else
+        saveData = newData;
     end
     % Store merged Data/ first data set in app
-    setappdata(h,'processedDataSet',newData)
+    setappdata(h,'processedDataSet',saveData)
     
 end
+
+
 
 %% Update processed data listbox
 % This part converts a comma seperated list to a cell array with the names
@@ -132,5 +140,7 @@ end
 set(handles.listbox_processedData,'String',namesProcessedData)
 set(handles.listbox_processedData,'Value',1)
 
+fprintf('\nDone.\n')
+fprintf('___________________________\n\n')
 
 end

@@ -184,6 +184,13 @@ if isappdata(h,'processedDataSet') == true
     rmappdata(h,'processedDataSet');
 end
 
+% Clear listboxes
+set(handles.listbox_rawData,'String','')
+set(handles.listbox_rawData,'Value',[])
+set(handles.listbox_processedData,'String','')
+set(handles.listbox_processedData,'Value',[])
+fprintf('---New Session---\n')
+
 
 % --- Executes on button press in push_saveData.
 function push_saveData_Callback(hObject, eventdata, handles)
