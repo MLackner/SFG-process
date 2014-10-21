@@ -55,14 +55,6 @@ function SFGprocess_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for SFGprocess
 handles.output = hObject;
 
-% Define name for temporary raw data file
-handles.options.fileNameRawData = 'tempDataRaw.mat';
-% Define name for temporary raw data file
-handles.options.fileNamePrData = 'tempDataPr.mat';
-% Delete temporary Data
-delete(handles.options.fileNameRawData)
-delete(handles.options.fileNamePrData)
-
 % Update handles structure
 guidata(hObject, handles);
 
@@ -106,15 +98,14 @@ function listbox_rawData_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from listbox_rawData
 
 % Get file name of raw data
-fileName = handles.options.fileNameRawData;
+dataName = 'rawDataSet';
 % Get index
 idx = get(handles.listbox_rawData,'Value');
-handles.options.idx = idx(end)
-idx
+handles.options.idx = idx(end);
 % Define style
 handles.options.style = '.';
 % Call function to show raw data in preview
-fcn_showData(handles,fileName);
+fcn_showData(handles,dataName);
 
 % --- Executes during object creation, after setting all properties.
 function listbox_rawData_CreateFcn(hObject, eventdata, handles)
@@ -135,6 +126,7 @@ function push_process_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+handles.options.signalAmplifier = 1e10;
 handles.options.FID = false;
 fcn_process(handles)
 
@@ -148,14 +140,14 @@ function listbox_processedData_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from listbox_processedData
 
 % Get file name of processed data
-fileName = handles.options.fileNamePrData;
+dataName = 'processedDataSet';
 % Get index
 idx = get(handles.listbox_processedData,'Value');
 handles.options.idx = idx(end);
 % Define style
 handles.options.style = '.-';
 % Call function to show processed data in preview
-fcn_showData(handles,fileName);
+fcn_showData(handles,dataName);
 
 % --- Executes during object creation, after setting all properties.
 function listbox_processedData_CreateFcn(hObject, eventdata, handles)
@@ -183,12 +175,14 @@ function push_newSession_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Delete temporary Data
-delete(handles.options.fileNameRawData)
-delete(handles.options.fileNamePrData)
-% Delete entries in boxes
-set(handles.listbox_rawData,'String','')
-set(handles.listbox_processedData,'String','')
+% Delete app data
+h = handles.figure1;
+if isappdata(h,'rawDataSet') == true
+    rmappdata(h,'rawDataSet');
+end
+if isappdata(h,'processedDataSet') == true
+    rmappdata(h,'processedDataSet');
+end
 
 
 % --- Executes on button press in push_saveData.

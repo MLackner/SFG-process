@@ -1,31 +1,31 @@
-function fcn_showData(handles,fileName)
+function fcn_showData(handles,dataName)
 % Show raw data in axes
 
 % Get value of selected data
 idx = handles.options.idx;
-% Load *.mat file
-matFile = load(fileName);
-% Get variable names from matfile
-varNames = fieldnames(matFile);
+% Get app data
+h = handles.figure1;
+dataSet = getappdata(h,dataName);
+
 % Get wavelength data
-if isfield(eval(['matFile.',varNames{idx}]),'wavelength')
+if isfield(dataSet,'wavelength')
     % For SFS
     if get(handles.radio_wn,'Value') == 1
         % Get wavenumber data
-        xData = eval(['matFile.',varNames{idx},'.wavenumber']);
+        xData = dataSet(idx).wavenumber;
     elseif get(handles.radio_wl,'Value') == 1
         % Get wavelength data
-        xData = eval(['matFile.',varNames{idx},'.wavelength']);
+        xData = dataSet(idx).wavelength;
     end
-elseif isfield(eval(['matFile.',varNames{idx}]),'delay')
+elseif isfield(dataSet,'delay')
     % For FIDs
-    xData = eval(['matFile.',varNames{idx},'.delay']);
+    xData = dataSet(idx).delay;
 else
     % Error dialog
     errordlg('No x-data found.')
 end
 % Get signal data
-yData = eval(['matFile.',varNames{idx},'.signal']);
+yData = dataSet(idx).signal;
 
 % Plot data
 plot(handles.axes_preview,xData,yData,handles.options.style)

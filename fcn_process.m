@@ -1,26 +1,22 @@
 function fcn_process(handles)
 % Process raw data
 
-% Get name of data file
-fileName = handles.options.fileNameRawData;
-% Load *.mat file
-matFile = load(fileName);
-% Get variable names from matfile
-varNames = fieldnames(matFile);
+% Get raw data
+h = handles.figure1;
+rawDataSet = getappdata(h,'rawDataSet');
 
 % Loop through every raw data set
-for i=1:length(varNames)
+for i=1:length(rawDataSet)
     % Get name of original file
-    name = eval(['matFile.',varNames{i},'.name']);
-    
+    name = rawDataSet(i).name
     % Get wavelength data
-    wavelengthData = eval(['matFile.',varNames{i},'.wavelength']);
+    wavelengthData = rawDataSet(i).wavelength;
     % Get signal data
-    signalData = eval(['matFile.',varNames{i},'.signal']);
+    signalData = rawDataSet(i).signal;
     
     %% Processing
     %% 1st step: Multiply signal data by (-1)
-    signalData = signalData*(-1);
+    signalData = signalData*(-1)*handles.options.signalAmplifier;
     
     %% 2nd step: Take all signal data points for one wavelength and average them
     % Count shots per wavelength
@@ -67,44 +63,74 @@ for i=1:length(varNames)
     wavenumber = 1e7./wlDataPr;
     
     %% Define structure of processed data
-    % Write
-    eval([varNames{i},'.name = name']);
-    eval([varNames{i},'.wavelength = wlDataPr']);
-    eval([varNames{i},'.wavenumber = wavenumber']);
-    eval([varNames{i},'.signal = sigDataPr']);
-    eval([varNames{i},'.stepSize = stepSize']);
-    eval([varNames{i},'.shotsPerAvg = shotsPerWL']);
+    % Write new data
+    newData = struct(...
+        'name',name,...
+        'wavelength',wlDataPr,...
+        'wavenumber',wavenumber,...
+        'signal',sigDataPr,...
+        'stepSize',stepSize,...
+        'shotsPerAvg',shotsPerWL,...
+        'parentFolder',rawDataSet(i).parentFolder)
     
     %% Redefine structure for FID
     if handles.options.FID == true
         % Set delay field
-        eval([varNames{i},'.delay = wlDataPr']);
+        newData.delay = wlDataPr;
         % Remove wavelength and wavenumber fields
         fields = {'wavelength','wavenumber'};
-        eval([varNames{i}, '= rmfield(',varNames{i},',fields)']);
+        newData = rmfield(newData,fields);
         
         % Call FID process function
-        FID = eval(varNames{i});
+        FID = newData;
         fcn_processFID(handles,FID)
     end
     
-    %% Store data in file
-    % Check if file exists
-    if exist(handles.options.fileNamePrData,'file') == 2
-        save(handles.options.fileNamePrData,varNames{i},'-append')
-    else
-        save(handles.options.fileNamePrData,varNames{i})
+    %% Store data in app
+    % Get Figure handle
+    h = handles.figure1;
+    % Check if there is already raw data stored
+    if isappdata(h,'processedDataSet') == true
+        % Exists
+        % Add new data to already existing data
+        oldData = getappdata(h,'processedDataSet');
+        % Check if there is already a data set with the same name as the
+        % current data set (newData)
+        for j=1:length(oldData)
+            strOne = oldData(j).name
+            strTwo = newData.name
+            if strcmp(strOne,strTwo)
+                % Overwrite that one
+                oldData(j)
+                newData
+                oldData(j) = newData;
+                fprintf('Overwrote %s!\n',oldData(j).name)
+            else
+                % Add data to structure array
+                newData = [oldData;newData];
+            end
+        end
     end
+    % Store merged Data/ first data set in app
+    setappdata(h,'processedDataSet',newData)
     
 end
 
 %% Update processed data listbox
-% Get actual file names of raw data
-namesPrData = cell(1,length(varNames));
-for k=1:length(varNames)
-    namesPrData{k} = eval(['matFile.',varNames{k},'.name']);
+% This part converts a comma seperated list to a cell array with the names
+% of the original data files
+
+% Get app data
+h = handles.figure1;
+processedDataSet = getappdata(h,'processedDataSet');
+% Create Cell array with names
+namesProcessedData = cell(1,length(processedDataSet));
+for i=1:length(processedDataSet)
+    namesProcessedData{i} = processedDataSet(i).name;
 end
-set(handles.listbox_processedData,'String',namesPrData)
+% Set listbox entries
+set(handles.listbox_processedData,'String',namesProcessedData)
+set(handles.listbox_processedData,'Value',1)
 
 
 end

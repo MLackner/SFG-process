@@ -31,15 +31,18 @@ end
 close(waitBar)
 
 %% Update raw data listbox
-% Load *.mat file
-matFile = load(handles.options.fileNameRawData);
-% Get variable names from matfile
-varNames = fieldnames(matFile);
-% Get actual file names of raw data
-namesRawData = cell(1,length(varNames));
-for i=1:length(varNames)
-    namesRawData{i} = eval(['matFile.',varNames{i},'.name']);
+% This part converts a comma seperated list to a cell array with the names
+% of the original data files
+
+% Get app data
+h = handles.figure1;
+rawDataSet = getappdata(h,'rawDataSet')
+% Create Cell array with names
+namesRawData = cell(1,length(rawDataSet));
+for i=1:length(rawDataSet)
+    namesRawData{i} = rawDataSet(i).name
 end
+% Set listbox entries
 set(handles.listbox_rawData,'String',namesRawData)
 set(handles.listbox_rawData,'Value',1)
 

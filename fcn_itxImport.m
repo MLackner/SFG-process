@@ -89,20 +89,28 @@ SigOsc1 = cell2mat(rawNumericColumns(:, 2));
 %     SigOsc3 = cell2mat(rawNumericColumns(:, 7));
 
 %% Write data in structure
-% Make valid name
-varName = matlab.lang.makeValidName(name);
-% Write
-eval([varName,'.name = name']);
-eval([varName,'.wavelength = WLOPG']);
-eval([varName,'.signal = SigOsc1']);
+% Name
+newData.name = name;
+% Wavelength
+newData.wavelength = WLOPG;
+% Signal
+newData.signal = SigOsc1;
+% Parent directory
+[~, parentFolder, ~] = fileparts(fileparts(filePath));
+newData.parentFolder = parentFolder;
 
-%% Store data in file
-% Check if file exists
-if exist(handles.options.fileNameRawData,'file') == 2
-    save(handles.options.fileNameRawData,varName,'-append')
-else
-    save(handles.options.fileNameRawData,varName)
+%% Store data in app
+% Get Figure handle
+h = handles.figure1;
+% Check if there is already raw data stored
+if isappdata(h,'rawDataSet') == true
+    % Exists
+    % Add new data to already existing data
+    oldData = getappdata(h,'rawDataSet')
+    newData = [oldData;newData]
 end
+% Store merged Data/ first data set in app
+setappdata(h,'rawDataSet',newData)
 
 
 end
