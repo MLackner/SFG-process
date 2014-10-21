@@ -11,8 +11,14 @@ matFile = load(fileName);
 % Get variable names from matfile
 varNames = fieldnames(matFile);
 
-% Get wavelength data
-xData = eval(['matFile.',varNames{idx},'.wavenumber']);
+if get(handles.radio_wn,'Value') == 1
+    % Get wavenumber data
+    xData = eval(['matFile.',varNames{idx},'.wavenumber']);
+elseif get(handles.radio_wl,'Value') == 1
+    % Get wavelength data
+    xData = eval(['matFile.',varNames{idx},'.wavelength']);
+end
+    
 % Get signal data
 yData = eval(['matFile.',varNames{idx},'.signal']);
 

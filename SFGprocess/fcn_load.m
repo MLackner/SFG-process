@@ -41,5 +41,6 @@ for i=1:length(varNames)
     namesRawData{i} = eval(['matFile.',varNames{i},'.name']);
 end
 set(handles.listbox_rawData,'String',namesRawData)
+set(handles.listbox_rawData,'Value',1)
 
 end

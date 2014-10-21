@@ -44,13 +44,12 @@ for i=1:length(varNames)
     % Get maximum WL
     maxWL = max(wavelengthData);
     % Total wavelength range
-    rangeWL = maxWL - minWL
+    rangeWL = maxWL - minWL;
     % Step size
-    stepSize = rangeWL/(lengthPD - 1)
+    stepSize = rangeWL/(lengthPD - 1);
     
     % Make array for processed Wavelength data
-    wlDataPr = minWL:stepSize:maxWL
-    length(wlDataPr)
+    wlDataPr = minWL:stepSize:maxWL;
     % Make empty array for processed signal data
     sigDataPr = zeros(1,length(wlDataPr));
     
@@ -75,6 +74,19 @@ for i=1:length(varNames)
     eval([varNames{i},'.signal = sigDataPr']);
     eval([varNames{i},'.stepSize = stepSize']);
     eval([varNames{i},'.shotsPerAvg = shotsPerWL']);
+    
+    %% Redefine structure for FID
+    if handles.options.FID == true
+        % Set delay field
+        eval([varNames{i},'.delay = wlDataPr']);
+        % Remove wavelength and wavenumber fields
+        fields = {'wavelength','wavenumber'};
+        eval([varNames{i}, '= rmfield(',varNames{i},',fields)']);
+        
+        % Call FID process function
+        FID = eval(varNames{i});
+        fcn_processFID(handles,FID)
+    end
     
     %% Store data in file
     % Check if file exists

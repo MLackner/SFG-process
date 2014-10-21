@@ -25,6 +25,10 @@ namesPrData = cell(1,length(varNames));
 for k=1:length(varNames)
     namesPrData{k} = eval(['matFile.',varNames{k},'.name']);
 end
-set(handles.listbox_processedData,'String',namesPrData,'Value',(idx-1))
+if idx > 1
+    set(handles.listbox_processedData,'String',namesPrData,'Value',(idx-1))
+else
+    set(handles.listbox_processedData,'String',namesPrData,'Value',1)
+end
 
 end

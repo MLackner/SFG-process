@@ -22,7 +22,7 @@ function varargout = SFGprocess(varargin)
 
 % Edit the above text to modify the response to help SFGprocess
 
-% Last Modified by GUIDE v2.5 15-Oct-2014 17:44:36
+% Last Modified by GUIDE v2.5 20-Oct-2014 16:49:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -135,6 +135,7 @@ function push_process_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+handles.options.FID = false;
 fcn_process(handles)
 
 % --- Executes on selection change in listbox_processedData.
@@ -230,8 +231,39 @@ function push_remove_Callback(hObject, eventdata, handles)
 % Call function
 fcn_removeEntry(handles)
 
-% --- Executes on button press in push_export.
-function push_export_Callback(hObject, eventdata, handles)
-% hObject    handle to push_export (see GCBO)
+% --- Executes on button press in push_saveMat.
+function push_saveMat_Callback(hObject, eventdata, handles)
+% hObject    handle to push_saveMat (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+fcn_export(handles)
+
+
+% --- Executes on button press in push_processFID.
+function push_processFID_Callback(hObject, eventdata, handles)
+% hObject    handle to push_processFID (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Set options
+handles.options.FID = true;
+% Call function
+fcn_process(handles)
+
+
+% --- Executes when selected object is changed in uibuttongroup1.
+function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
+% hObject    handle to the selected object in uibuttongroup1 
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get file name of processed data
+fileName = handles.options.fileNamePrData;
+% Get index
+idx = get(handles.listbox_processedData,'Value');
+handles.options.idx = idx(end);
+% Define style
+handles.options.style = '.-';
+% Call function to show processed data in preview
+fcn_showData(handles,fileName);
