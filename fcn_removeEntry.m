@@ -1,34 +1,36 @@
 function fcn_removeEntry(handles)
 % Removes an entry from the list of processed data
 
-%% Open and read temporary *.mat file
-% Get name of temporary data file
-fileName = handles.options.fileNamePrData;
-% Load *.mat file
-matFile = load(fileName);
-% Get variable names from matfile
-varNames = fieldnames(matFile);
+%% Remove selected
 % Get selected index
 idx = get(handles.listbox_processedData,'Value');
-% Get variable name
-varName = varNames{idx};
-% Call remove function
-fcn_rmvar(fileName,varName);
+% Get processed data
+h = handles.figure1;
+dataSet = getappdata(h,'processedDataSet');
+% Get name of data
+name = dataSet(idx).name;
+% Remove indexed data
+dataSet(idx) = [];
+fprintf('Removed data: %s\n',name)
+% Save data Set
+setappdata(h,'processedDataSet',dataSet)
 
 %% Update processed data listbox
-% Load *.mat file
-matFile = load(fileName);
-% Get variable names from matfile
-varNames = fieldnames(matFile);
-% Get actual file names of raw data
-namesPrData = cell(1,length(varNames));
-for k=1:length(varNames)
-    namesPrData{k} = eval(['matFile.',varNames{k},'.name']);
+% Create Cell array with names
+namesProcessedData = cell(1,length(dataSet));
+for i=1:length(dataSet)
+    namesProcessedData{i} = dataSet(i).name;
 end
 if idx > 1
-    set(handles.listbox_processedData,'String',namesPrData,'Value',(idx-1))
+    % Go down one index
+    set(handles.listbox_processedData,...
+        'String',namesProcessedData,...
+        'Value',(idx-1))
 else
-    set(handles.listbox_processedData,'String',namesPrData,'Value',1)
+    % If index is at first entry stay there
+    set(handles.listbox_processedData,...
+        'String',namesProcessedData,...
+        'Value',1)
 end
 
 end

@@ -101,6 +101,10 @@ function listbox_rawData_Callback(hObject, eventdata, handles)
 dataName = 'rawDataSet';
 % Get index
 idx = get(handles.listbox_rawData,'Value');
+% Return if nothing in list
+if isempty(idx)
+    return
+end
 handles.options.idx = idx(end);
 % Define style
 handles.options.style = '.';
@@ -143,6 +147,10 @@ function listbox_processedData_Callback(hObject, eventdata, handles)
 dataName = 'processedDataSet';
 % Get index
 idx = get(handles.listbox_processedData,'Value');
+% Return if nothing in list
+if isempty(idx)
+    return
+end
 handles.options.idx = idx(end);
 % Define style
 handles.options.style = '.-';
