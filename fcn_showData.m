@@ -26,12 +26,18 @@ for i=1:length(index)
         errordlg('No x-data found.')
     end
     % Get signal data
-    yData = dataSet(index(i)).signal;
+    if exist('dataSet(index(i)).offset','var') ~= 0
+        dataSet(index(i)).offset = 0;
+    end
+        
+    yData = dataSet(index(i)).signal + dataSet(index(i)).offset;
+    ylabel('Signal (a.u.)')
     
     % Plot data
     plot(handles.axes_preview,xData,yData,handles.options.style,...
         'DisplayName',regexprep(dataSet(index(i)).name,'_','\\_'))
     hold on
+    box on
     legend('off')
     legend('show')
 end

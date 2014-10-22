@@ -22,7 +22,7 @@ function varargout = SFGprocess(varargin)
 
 % Edit the above text to modify the response to help SFGprocess
 
-% Last Modified by GUIDE v2.5 22-Oct-2014 09:25:24
+% Last Modified by GUIDE v2.5 22-Oct-2014 14:17:15
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -279,3 +279,12 @@ function uipush_remove_ClickedCallback(hObject, eventdata, handles)
 
 % Call function
 fcn_removeEntry(handles)
+
+
+% --------------------------------------------------------------------
+function uipush_addOffset_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_addOffset (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+fcn_addOffset(handles)

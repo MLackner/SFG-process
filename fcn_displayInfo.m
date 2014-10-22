@@ -16,11 +16,12 @@ maxWN = max(dataSet(index).wavenumber);
 shotsPerAvg = dataSet(index).shotsPerAvg;
 stepSize = dataSet(index).stepSize;
 signalAmp = dataSet(index).signalAmp;
+offset = dataSet(index).offset
 parentFolder = dataSet(index).parentFolder;
 
 % Display Info
-infoStr = sprintf('Name: %s\nminWL: %g  maxWL: %g\nminWN: %g  maxWN: %g\nSPAvg: %g\nStepSize: %g\nSigAmp: %g\nParentDir: %s',...
-    name,minWL,maxWL,minWN,maxWN,shotsPerAvg,stepSize,signalAmp,parentFolder);
+infoStr = sprintf('Name: %s\nminWL: %g  maxWL: %g\nminWN: %g  maxWN: %g\nSPAvg: %g\nStepSize: %g\nSigAmp: %g\nOffset: %g\nParentDir: %s',...
+    name,minWL,maxWL,minWN,maxWN,shotsPerAvg,stepSize,signalAmp,offset,parentFolder)
 set(handles.text_dataInfo,'String',infoStr)
 
 end

@@ -19,7 +19,8 @@ for i=1:length(index)
     end
     
     % Get signal data
-    yData = dataSet(index(i)).signal;
+    yData = dataSet(index(i)).signal + dataSet(index(i)).offset;
+    ylabel('Signal (a.u.)')
     
     % Plot
     figure(1)
@@ -30,5 +31,5 @@ for i=1:length(index)
     legend('show')
 end
 hold off
-
+box on
 end
