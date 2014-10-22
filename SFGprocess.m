@@ -22,7 +22,7 @@ function varargout = SFGprocess(varargin)
 
 % Edit the above text to modify the response to help SFGprocess
 
-% Last Modified by GUIDE v2.5 20-Oct-2014 16:49:39
+% Last Modified by GUIDE v2.5 22-Oct-2014 09:25:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -52,6 +52,9 @@ function SFGprocess_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to SFGprocess (see VARARGIN)
 
+% Define signal amplification
+handles.options.signalAmplifier = 1e10;
+
 % Choose default command line output for SFGprocess
 handles.output = hObject;
 
@@ -71,22 +74,6 @@ function varargout = SFGprocess_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
-
-
-% --- Executes on button press in push_loadSingle.
-function push_loadSingle_Callback(hObject, eventdata, handles)
-% hObject    handle to push_loadSingle (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in push_loadMulti.
-function push_loadMulti_Callback(hObject, eventdata, handles)
-% hObject    handle to push_loadMulti (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-fcn_load(handles);
 
 % --- Executes on selection change in listbox_rawData.
 function listbox_rawData_Callback(hObject, eventdata, handles)
@@ -123,17 +110,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in push_process.
-function push_process_Callback(hObject, eventdata, handles)
-% hObject    handle to push_process (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-handles.options.signalAmplifier = 1e10;
-handles.options.FID = false;
-fcn_process(handles)
-
 % --- Executes on selection change in listbox_processedData.
 function listbox_processedData_Callback(hObject, eventdata, handles)
 % hObject    handle to listbox_processedData (see GCBO)
@@ -169,37 +145,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in push_loadData.
-function push_loadData_Callback(hObject, eventdata, handles)
-% hObject    handle to push_loadData (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in push_newSession.
-function push_newSession_Callback(hObject, eventdata, handles)
-% hObject    handle to push_newSession (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Delete app data
-h = handles.figure1;
-if isappdata(h,'rawDataSet') == true
-    rmappdata(h,'rawDataSet');
-end
-if isappdata(h,'processedDataSet') == true
-    rmappdata(h,'processedDataSet');
-end
-
-% Clear listboxes
-set(handles.listbox_rawData,'String','')
-set(handles.listbox_rawData,'Value',[])
-set(handles.listbox_processedData,'String','')
-set(handles.listbox_processedData,'Value',[])
-fprintf('---New Session---\n')
-
-
 % --- Executes on button press in push_saveData.
 function push_saveData_Callback(hObject, eventdata, handles)
 % hObject    handle to push_saveData (see GCBO)
@@ -230,23 +175,11 @@ function push_plot_Callback(hObject, eventdata, handles)
 % Call funtion
 fcn_plot(handles)
 
-
-% --- Executes on button press in push_remove.
-function push_remove_Callback(hObject, eventdata, handles)
-% hObject    handle to push_remove (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Call function
-fcn_removeEntry(handles)
-
 % --- Executes on button press in push_saveMat.
 function push_saveMat_Callback(hObject, eventdata, handles)
 % hObject    handle to push_saveMat (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-fcn_export(handles)
 
 
 % --- Executes on button press in push_processFID.
@@ -254,11 +187,6 @@ function push_processFID_Callback(hObject, eventdata, handles)
 % hObject    handle to push_processFID (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% Set options
-handles.options.FID = true;
-% Call function
-fcn_process(handles)
 
 
 % --- Executes when selected object is changed in uibuttongroup1.
@@ -276,3 +204,76 @@ handles.options.idx = idx(end);
 handles.options.style = '.-';
 % Call function to show processed data in preview
 fcn_showData(handles,fileName);
+
+
+% --------------------------------------------------------------------
+function uipush_newSession_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_newSession (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Delete app data
+h = handles.figure1;
+if isappdata(h,'rawDataSet') == true
+    rmappdata(h,'rawDataSet');
+end
+if isappdata(h,'processedDataSet') == true
+    rmappdata(h,'processedDataSet');
+end
+
+% Clear listboxes
+set(handles.listbox_rawData,'String','')
+set(handles.listbox_rawData,'Value',[])
+set(handles.listbox_processedData,'String','')
+set(handles.listbox_processedData,'Value',[])
+fprintf('---New Session---\n')
+
+
+% --------------------------------------------------------------------
+function uipush_loadRawData_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_loadRawData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+fcn_load(handles);
+
+
+% --------------------------------------------------------------------
+function uipush_saveMat_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_saveMat (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+fcn_export(handles)
+
+
+% --------------------------------------------------------------------
+function uipush_process_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_process (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+handles.options.FID = false;
+fcn_process(handles)
+
+
+% --------------------------------------------------------------------
+function uipush_processFID_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_processFID (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Set options
+handles.options.FID = true;
+% Call function
+fcn_process(handles)
+
+
+% --------------------------------------------------------------------
+function uipush_remove_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_remove (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Call function
+fcn_removeEntry(handles)
