@@ -132,6 +132,8 @@ handles.options.idx = idx(end);
 handles.options.style = '.-';
 % Call function to show processed data in preview
 fcn_showData(handles,dataName);
+% Display Info
+fcn_displayInfo(handles);
 
 % --- Executes during object creation, after setting all properties.
 function listbox_processedData_CreateFcn(hObject, eventdata, handles)
