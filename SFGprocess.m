@@ -92,7 +92,7 @@ idx = get(handles.listbox_rawData,'Value');
 if isempty(idx)
     return
 end
-handles.options.idx = idx(end);
+handles.options.idx = idx;
 % Define style
 handles.options.style = '.';
 % Call function to show raw data in preview
@@ -127,7 +127,7 @@ idx = get(handles.listbox_processedData,'Value');
 if isempty(idx)
     return
 end
-handles.options.idx = idx(end);
+handles.options.idx = idx;
 % Define style
 handles.options.style = '.-';
 % Call function to show processed data in preview
@@ -201,7 +201,7 @@ function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
 fileName = handles.options.fileNamePrData;
 % Get index
 idx = get(handles.listbox_processedData,'Value');
-handles.options.idx = idx(end);
+handles.options.idx = idx;
 % Define style
 handles.options.style = '.-';
 % Call function to show processed data in preview
