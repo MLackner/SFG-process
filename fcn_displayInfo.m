@@ -7,21 +7,28 @@ index = handles.options.idx;
 h = handles.figure1;
 dataSet = getappdata(h,'processedDataSet');
 
-% Get Info Data
-name = dataSet(index).name;
-minWL = min(dataSet(index).wavelength);
-maxWL = max(dataSet(index).wavelength);
-minWN = min(dataSet(index).wavenumber);
-maxWN = max(dataSet(index).wavenumber);
-shotsPerAvg = dataSet(index).shotsPerAvg;
-stepSize = dataSet(index).stepSize;
-signalAmp = dataSet(index).signalAmp;
-offset = dataSet(index).offset
-parentFolder = dataSet(index).parentFolder;
+if length(index) > 1
+    % If multiple data is selected
+    infoStr = sprintf('Multiple data sets selected');
+else
+    % Get Info Data
+    name = dataSet(index).name;
+    minWL = min(dataSet(index).wavelength);
+    maxWL = max(dataSet(index).wavelength);
+    minWN = min(dataSet(index).wavenumber);
+    maxWN = max(dataSet(index).wavenumber);
+    shotsPerAvg = dataSet(index).shotsPerAvg;
+    stepSize = dataSet(index).stepSize;
+    signalAmp = dataSet(index).signalAmp;
+    offset = dataSet(index).offset;
+    parentFolder = dataSet(index).parentFolder;
+        
+    % Display Info
+    infoStr = sprintf('Name: %s\nminWL: %g  maxWL: %g\nminWN: %g  maxWN: %g\nSPAvg: %g\nStepSize: %g\nSigAmp: %g\nOffset: %g\nParentDir: %s',...
+        name,minWL,maxWL,minWN,maxWN,shotsPerAvg,stepSize,signalAmp,offset,parentFolder);
+end
 
-% Display Info
-infoStr = sprintf('Name: %s\nminWL: %g  maxWL: %g\nminWN: %g  maxWN: %g\nSPAvg: %g\nStepSize: %g\nSigAmp: %g\nOffset: %g\nParentDir: %s',...
-    name,minWL,maxWL,minWN,maxWN,shotsPerAvg,stepSize,signalAmp,offset,parentFolder)
+% Set info string
 set(handles.text_dataInfo,'String',infoStr)
 
 end

@@ -22,7 +22,7 @@ function varargout = SFGprocess(varargin)
 
 % Edit the above text to modify the response to help SFGprocess
 
-% Last Modified by GUIDE v2.5 22-Oct-2014 14:17:15
+% Last Modified by GUIDE v2.5 24-Oct-2014 21:44:12
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -129,7 +129,7 @@ if isempty(idx)
 end
 handles.options.idx = idx;
 % Define style
-handles.options.style = '.-';
+handles.options.style = '.:';
 % Call function to show processed data in preview
 fcn_showData(handles,dataName);
 % Display Info
@@ -198,14 +198,10 @@ function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get file name of processed data
-fileName = handles.options.fileNamePrData;
-% Get index
-idx = get(handles.listbox_processedData,'Value');
-handles.options.idx = idx;
-% Define style
-handles.options.style = '.-';
-% Call function to show processed data in preview
-fcn_showData(handles,fileName);
+dataName = 'processedDataSet';
+handles.options.idx = get(handles.listbox_processedData,'Value');
+handles.options.style = '.:';
+fcn_showData(handles,dataName)
 
 
 % --------------------------------------------------------------------
@@ -288,3 +284,19 @@ function uipush_addOffset_ClickedCallback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 fcn_addOffset(handles)
+
+
+% --------------------------------------------------------------------
+function menu_data_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_data (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --------------------------------------------------------------------
+function data_import_Callback(hObject, eventdata, handles)
+% hObject    handle to data_import (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+fcn_importMatFile(handles)

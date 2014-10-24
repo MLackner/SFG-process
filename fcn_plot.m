@@ -26,9 +26,15 @@ for i=1:length(index)
     figure(1)
     hold on
     legend('off')
-    plot(xData,yData,'.-',...
+    plot(xData,yData,'.:',...
         'DisplayName',regexprep(dataSet(index(i)).name,'_','\\_'))
     legend('show')
+    
+    % Plot fit data if available
+    if isfield(dataSet(index(i)),'fit') && get(handles.radio_wn,'Value') == 1
+        plot(dataSet(index(i)).fit,'-')
+    end
+    
 end
 hold off
 box on
