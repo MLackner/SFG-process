@@ -1,18 +1,29 @@
 function fcn_load(handles)
 % Returns path to selected file or folder
 
+% Start timer
+tic
+
 %% Get files
 % Open dialog
-[fileName,pathName,filterIndex] = uigetfile('*.itx','Select files',...
-    'MultiSelect','on') % Returns fileName as cell array (if multiple)
+[fileName,pathName,~] = uigetfile('*.itx','Select files',...
+    'MultiSelect','on'); % Returns fileName as cell array (if multiple)
 % Convert string to array
 if iscell(fileName)==false
-    fileName = cellstr(fileName)
+    fileName = cellstr(fileName);
 end
 % Make Filepaths
 filePath = cell(1,length(fileName));
 for i=1:length(fileName)
-    filePath{i} = [pathName,fileName{i}]
+    filePath{i} = [pathName,fileName{i}];
+end
+
+% Output
+formatSpec = 'Importing %i files:\n';
+fprintf(formatSpec,length(fileName))
+for i=1:length(fileName)
+    formatSpec = '\t%s\n';
+    fprintf(formatSpec,fileName{i});
 end
 
 % Init waitbar progress
@@ -36,14 +47,20 @@ close(waitBar)
 
 % Get app data
 h = handles.figure1;
-rawDataSet = getappdata(h,'rawDataSet')
+rawDataSet = getappdata(h,'rawDataSet');
 % Create Cell array with names
 namesRawData = cell(1,length(rawDataSet));
 for i=1:length(rawDataSet)
-    namesRawData{i} = rawDataSet(i).name
+    namesRawData{i} = rawDataSet(i).name;
 end
 % Set listbox entries
-set(handles.listbox_rawData,'String',namesRawData)
-set(handles.listbox_rawData,'Value',1)
+set(handles.listbox_rawData,    'String',   namesRawData)
+set(handles.listbox_rawData,    'Value',    1)
+
+%Stop timer
+duration = toc;
+%Output
+formatSpec = 'Import successful. Duration: %g seconds.\n';
+fprintf(formatSpec,round(duration))
 
 end

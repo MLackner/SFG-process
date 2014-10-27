@@ -106,8 +106,8 @@ h = handles.figure1;
 if isappdata(h,'rawDataSet') == true
     % Exists
     % Add new data to already existing data
-    oldData = getappdata(h,'rawDataSet')
-    newData = [oldData;newData]
+    oldData = getappdata(h,'rawDataSet');
+    newData = [oldData;newData];
 end
 % Store merged Data/ first data set in app
 setappdata(h,'rawDataSet',newData)

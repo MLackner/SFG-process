@@ -22,7 +22,7 @@ function varargout = SFGprocess(varargin)
 
 % Edit the above text to modify the response to help SFGprocess
 
-% Last Modified by GUIDE v2.5 24-Oct-2014 21:44:12
+% Last Modified by GUIDE v2.5 27-Oct-2014 00:38:46
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -300,3 +300,12 @@ function data_import_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 fcn_importMatFile(handles)
+
+
+% --------------------------------------------------------------------
+function uipush_printInfo_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_printInfo (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+fcn_printInfo(handles)

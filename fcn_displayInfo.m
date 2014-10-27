@@ -24,7 +24,7 @@ else
     parentFolder = dataSet(index).parentFolder;
         
     % Display Info
-    infoStr = sprintf('Name: %s\nminWL: %g  maxWL: %g\nminWN: %g  maxWN: %g\nSPAvg: %g\nStepSize: %g\nSigAmp: %g\nOffset: %g\nParentDir: %s',...
+    infoStr = sprintf('Name: %s\nminWL: %g        maxWL: %g\nminWN: %g     maxWN: %g\nSPAvg: %g\nStepSize: %g\nSigAmp: %g\nOffset: %g\nParentDir: %s',...
         name,minWL,maxWL,minWN,maxWN,shotsPerAvg,stepSize,signalAmp,offset,parentFolder);
 end
 
