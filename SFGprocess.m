@@ -22,7 +22,7 @@ function varargout = SFGprocess(varargin)
 
 % Edit the above text to modify the response to help SFGprocess
 
-% Last Modified by GUIDE v2.5 27-Oct-2014 00:38:46
+% Last Modified by GUIDE v2.5 28-Oct-2014 23:51:06
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -54,6 +54,15 @@ function SFGprocess_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Define signal amplification
 handles.options.signalAmplifier = 1e10;
+%% Define plot style
+% Marker type
+handles.options.marker = '.';
+% Marker size
+handles.options.markerSize = 10;
+% Line type
+handles.options.line = '-';
+% Line width
+handles.options.lineWidth = 1;
 
 % Choose default command line output for SFGprocess
 handles.output = hObject;
@@ -128,8 +137,6 @@ if isempty(idx)
     return
 end
 handles.options.idx = idx;
-% Define style
-handles.options.style = '.:';
 % Call function to show processed data in preview
 fcn_showData(handles,dataName);
 % Display Info
@@ -156,41 +163,6 @@ function push_saveData_Callback(hObject, eventdata, handles)
 % Call funtion
 fcn_saveData(handles)
 
-
-% --- Executes on button press in push_newFig.
-function push_newFig_Callback(hObject, eventdata, handles)
-% hObject    handle to push_newFig (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-figure;
-set(0,'CurrentFigure',gcf)
-xlabel('Wavenumber [cm^{-1}]')
-ylabel('Signal (a.u.)')
-
-% --- Executes on button press in push_plot.
-function push_plot_Callback(hObject, eventdata, handles)
-% hObject    handle to push_plot (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Call funtion
-fcn_plot(handles)
-
-% --- Executes on button press in push_saveMat.
-function push_saveMat_Callback(hObject, eventdata, handles)
-% hObject    handle to push_saveMat (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in push_processFID.
-function push_processFID_Callback(hObject, eventdata, handles)
-% hObject    handle to push_processFID (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
 % --- Executes when selected object is changed in uibuttongroup1.
 function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
 % hObject    handle to the selected object in uibuttongroup1 
@@ -200,7 +172,6 @@ function uibuttongroup1_SelectionChangedFcn(hObject, eventdata, handles)
 % Get file name of processed data
 dataName = 'processedDataSet';
 handles.options.idx = get(handles.listbox_processedData,'Value');
-handles.options.style = '.:';
 fcn_showData(handles,dataName)
 
 
@@ -309,3 +280,24 @@ function uipush_printInfo_ClickedCallback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 fcn_printInfo(handles)
+
+
+% --------------------------------------------------------------------
+function uipush_newFig_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_newFig (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+figure;
+set(0,'CurrentFigure',gcf)
+xlabel('Wavenumber [cm^{-1}]')
+ylabel('Signal (a.u.)')
+
+% --------------------------------------------------------------------
+function uipush_plotSelectd_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipush_plotSelectd (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Call funtion
+fcn_plot(handles)

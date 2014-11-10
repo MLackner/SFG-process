@@ -27,21 +27,39 @@ for i=1:length(index)
         % Error dialog
         errordlg('No x-data found.')
     end
-    % Get signal data
-    if exist('dataSet(index(i)).offset','var') == 0
-        dataSet(index(i)).offset = 0;
-    end
     
-    yData = dataSet(index(i)).signal + dataSet(index(i)).offset;
+    %% Get signal data
+    
+    % Check if offset field exists and is not empty
+    if isfield(dataSet(index(i)),'offset') &&...
+            ~isempty(dataSet(index(i)).offset)
+        offset = dataSet(index(i)).offset;
+    else
+        offset = 0;
+    end
+        
+    
+    % Get signal data and add offset
+    yData = dataSet(index(i)).signal + offset;
     
     % Plot data
-    plot(ax,xData,yData,handles.options.style,...
-        'DisplayName',regexprep(dataSet(index(i)).name,'_','\\_'))
+    p = plot(ax,xData,yData);
+    p.DisplayName = regexprep(dataSet(index(i)).name,'_','\\_');
+    p.Marker = handles.options.marker;
+    p.MarkerSize = handles.options.markerSize;
+    p.LineStyle = handles.options.line;
+    p.LineWidth = handles.options.lineWidth;
+    
     hold on
     
     % Plot fit data if available
     if isfield(dataSet(index(i)),'fit') && get(handles.radio_wn,'Value') == 1
-        plot(dataSet(index(i)).fit,'-')
+        f = plot(dataSet(index(i)).fit,'-');
+        f.DisplayName = regexprep(dataSet(index(i)).name,'_','\\_');
+        f.Color = p.Color;
+        f.LineWidth = 2;
+        p.LineStyle = 'none';
+        p.DisplayName = '';
     end
     
     % Make axis labels
@@ -54,7 +72,7 @@ for i=1:length(index)
     % Other plot options
     box on
     legend('off')
-    legend('show')
+    legend('show','Location','best')
 end
 
 hold off

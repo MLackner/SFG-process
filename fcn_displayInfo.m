@@ -20,7 +20,14 @@ else
     shotsPerAvg = dataSet(index).shotsPerAvg;
     stepSize = dataSet(index).stepSize;
     signalAmp = dataSet(index).signalAmp;
-    offset = dataSet(index).offset;
+    % Offset
+    if isfield(dataSet(index),'offset')
+        % If field exists
+        offset = dataSet(index).offset;
+    else
+        % If field doesn't exist
+        offset = nan;
+    end
     parentFolder = dataSet(index).parentFolder;
         
     % Display Info

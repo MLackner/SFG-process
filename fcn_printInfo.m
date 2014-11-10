@@ -31,10 +31,10 @@ else
         data{i,6} = dataSet(idx(i)).stepSize;
     end
     % Print
-    f = figure('Position',[440 500 700 146]);
+    f = figure('Position',[440 500 900 100]);
     t = uitable(f,  'Data',         data,...
         'ColumnName',   columnNames,...
-        'RowName',      rowNames)
+        'RowName',      rowNames);
     % Set width and height
     t.Position(3) = t.Extent(3);
     t.Position(4) = t.Extent(4);

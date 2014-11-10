@@ -26,8 +26,13 @@ for i=1:length(index)
     figure(1)
     hold on
     legend('off')
-    plot(xData,yData,'.:',...
-        'DisplayName',regexprep(dataSet(index(i)).name,'_','\\_'))
+    
+    p = plot(xData,yData);
+    p.DisplayName = regexprep(dataSet(index(i)).name,'_','\\_');
+    p.LineWidth = 1;
+    p.Marker = '.';
+    p.MarkerSize = 2;
+    
     legend('show')
     
     % Plot fit data if available
