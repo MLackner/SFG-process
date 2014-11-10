@@ -27,6 +27,12 @@ end
 %% Read text
 text = fileread(filename);
 
+%% Return if file is empty
+if numel(text) == 0
+    fprintf('Could not import %s. (emtpty file)',filename)
+    return
+end
+
 %% Search for waves
 exprWAVES = 'WAVES';
 [startWAVES,endWAVES] = regexp(text,exprWAVES);
@@ -65,6 +71,10 @@ exprEND = 'END';
 % Correct indices
 endDATA = startEND - 1;
 startWAVEINFO = endEND + 1;
+% If no "END" keyword exists (corupted file?) set data end to end of file
+if numel(endDATA) < numel(startDATA)
+    endDATA(numel(startDATA)) = numel(text);
+end
 
 
 %% Number of wavesets
@@ -80,15 +90,19 @@ for i=1:numWavesets
     % Data
     textDATA{i} = text(startDATA(i):endDATA(i));
     % Wave Info
-    textWAVEINFO{i} = text(startWAVEINFO(i):endWAVEINFO(i));
+    if ~isempty(startWAVEINFO)
+        textWAVEINFO{i} = text(startWAVEINFO(i):endWAVEINFO(i));
+    end
     
     %% Read WAVEINFO data
-    % Get start of lines
-    startLINE = regexp(textWAVEINFO{i},'X');
-    % Get line ends
-    endLINE = regexp(textWAVEINFO{i},'\r');
-    % Loop through every line
-    %[WIP]
+    if ~isempty(startWAVEINFO)
+        % Get start of lines
+        startLINE = regexp(textWAVEINFO{i},'X');
+        % Get line ends
+        endLINE = regexp(textWAVEINFO{i},'\r');
+        % Loop through every line
+        %[WIP]
+    end
     
     %% Combine data and header
     % Write headers in cell
