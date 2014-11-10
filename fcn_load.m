@@ -33,7 +33,33 @@ waitBar = waitbar(progress,...
 % Call import function for every selected file
 for i=1:length(filePath)
     % Call import function
-    fcn_itxImport(handles,filePath{i});
+    newData = itximport(filePath{i},'struct');
+    
+    %% Write data in structure
+    % Name
+    [~,name,~] = fileparts(filePath{i});
+    newData.name = name;
+    % Wavelength
+    newData.wavelength = newData.WLOPG;
+    % Signal
+    newData.signal = newData.SigOsc1;
+    % Parent directory
+    [~, parentFolder, ~] = fileparts(fileparts(filePath{i}));
+    newData.parentFolder = parentFolder;
+    
+    %% Store data in app
+    % Get Figure handle
+    h = handles.figure1;
+    % Check if there is already raw data stored
+    if isappdata(h,'rawDataSet') == true
+        % Exists
+        % Add new data to already existing data
+        oldData = getappdata(h,'rawDataSet');
+        newData = [oldData;newData];
+    end
+    % Store merged Data/ first data set in app
+    setappdata(h,'rawDataSet',newData)
+    
     % Update waitbar
     progress = i/length(filePath);
     waitbar(progress);
